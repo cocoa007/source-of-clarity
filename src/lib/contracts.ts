@@ -23,11 +23,13 @@ export async function searchContracts(opts: {
   sip009?: boolean;
   sip010?: boolean;
   deployer?: string;
+  network?: string;
   page?: number;
   limit?: number;
 }) {
-  const { query, sip009, sip010, deployer, page = 1, limit = 24 } = opts;
+  const { query, sip009, sip010, deployer, network = "mainnet", page = 1, limit = 24 } = opts;
   const conditions = [];
+  conditions.push(eq(contracts.network, network));
 
   if (query) {
     conditions.push(
@@ -44,7 +46,11 @@ export async function searchContracts(opts: {
   const where = conditions.length > 0 ? and(...conditions) : undefined;
   const offset = (page - 1) * limit;
 
-  const [rows, countResult] = await Promise.all([
+  const queries: [
+    Promise<(typeof contracts.$inferSelect)[]>,
+    Promise<{ count: number }[]>,
+    Promise<{ contractId: string; functionName: string; access: string }[]>,
+  ] = [
     db
       .select()
       .from(contracts)
@@ -56,31 +62,48 @@ export async function searchContracts(opts: {
       .select({ count: sql<number>`count(*)::int` })
       .from(contracts)
       .where(where),
-  ]);
+    // Search functions by name when there's a query
+    query
+      ? db
+          .select({
+            contractId: contractFunctions.contractId,
+            functionName: contractFunctions.name,
+            access: contractFunctions.access,
+          })
+          .from(contractFunctions)
+          .where(ilike(contractFunctions.name, `%${query}%`))
+          .limit(20)
+      : Promise.resolve([]),
+  ];
+
+  const [rows, countResult, functionMatches] = await Promise.all(queries);
 
   return {
     contracts: rows,
     total: countResult[0]?.count || 0,
     page,
     totalPages: Math.ceil((countResult[0]?.count || 0) / limit),
+    functionMatches,
   };
 }
 
-export async function getContractStats() {
+export async function getContractStats(network = "mainnet") {
   const result = await db
     .select({
       total: sql<number>`count(*)::int`,
       nftCount: sql<number>`count(*) filter (where sip_009 = true)::int`,
       ftCount: sql<number>`count(*) filter (where sip_010 = true)::int`,
     })
-    .from(contracts);
+    .from(contracts)
+    .where(eq(contracts.network, network));
   return result[0];
 }
 
-export async function getRecentContracts(limit = 10) {
+export async function getRecentContracts(limit = 10, network = "mainnet") {
   return db
     .select()
     .from(contracts)
+    .where(eq(contracts.network, network))
     .orderBy(desc(contracts.blockHeight))
     .limit(limit);
 }

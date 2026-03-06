@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Simplified diamond + Stacks for favicon -->
+  <path d="M16 2L3 13L16 30L29 13L16 2Z" fill="#f7931a" opacity="0.15"/>
+  <path d="M16 2L3 13L29 13L16 2Z" fill="#f7931a" opacity="0.95"/>
+  <path d="M5 14L16 28L12 19L5 14Z" fill="#f7931a" opacity="0.6"/>
+  <path d="M27 14L16 28L20 19L27 14Z" fill="#f7931a" opacity="0.8"/>
+  <path d="M12 19L16 28L20 19L16 16L12 19Z" fill="#f7931a" opacity="0.7"/>
+  <line x1="3" y1="13" x2="29" y2="13" stroke="#fff" stroke-width="1" opacity="0.3"/>
+</svg>

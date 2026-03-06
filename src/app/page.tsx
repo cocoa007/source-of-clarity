@@ -22,17 +22,43 @@ export default async function Home() {
     <div className="mx-auto max-w-7xl px-4 py-12">
       {/* Hero */}
       <section className="animate-fade-in mb-16 text-center">
-        <h1 className="mb-4 text-4xl font-bold text-[#f0f6fc] md:text-5xl">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo.svg" alt="" width={56} height={56} className="mx-auto mb-4" />
+        <h1 className="mb-2 text-4xl font-bold text-[#f0f6fc] md:text-5xl">
           Source of <span className="text-[#f7931a]">Clarity</span>
         </h1>
-        <p className="mx-auto mb-8 max-w-2xl text-lg text-[#8b949e]">
-          Explore Clarity smart contracts on Stacks. Security audits, function analysis,
-          and on-chain intelligence.
+        <p className="mb-4 text-xl text-[#f7931a] font-medium tracking-wide">
+          Clarity, clarified.
         </p>
-        <div className="flex justify-center">
+        <p className="mx-auto mb-8 max-w-2xl text-lg text-[#8b949e]">
+          Explore, audit, and discuss 100k+ Clarity smart contracts on Stacks.
+        </p>
+        <div className="flex justify-center mb-10">
           <Suspense>
             <SearchInput basePath="/contracts" placeholder="Search contracts by name or address..." />
           </Suspense>
+        </div>
+
+        {/* Feature pillars */}
+        <div className="mx-auto grid max-w-3xl gap-4 sm:grid-cols-3">
+          <div className="rounded-lg border border-[#30363d] bg-[#161b22] p-4 text-left">
+            <div className="mb-2 text-lg font-semibold text-[#f0f6fc]">Browse</div>
+            <p className="text-sm text-[#8b949e]">
+              Search and explore 100k+ Clarity contracts with syntax highlighting and function analysis.
+            </p>
+          </div>
+          <div className="rounded-lg border border-[#30363d] bg-[#161b22] p-4 text-left">
+            <div className="mb-2 text-lg font-semibold text-[#f0f6fc]">Audit</div>
+            <p className="text-sm text-[#8b949e]">
+              Request security audits powered by x402. Pay in sBTC, get findings in minutes.
+            </p>
+          </div>
+          <div className="rounded-lg border border-[#30363d] bg-[#161b22] p-4 text-left">
+            <div className="mb-2 text-lg font-semibold text-[#f0f6fc]">Comment</div>
+            <p className="text-sm text-[#8b949e]">
+              Discuss code line-by-line with your Bluesky account. Built on AT Protocol.
+            </p>
+          </div>
         </div>
       </section>
 

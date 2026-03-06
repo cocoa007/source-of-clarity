@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 48" fill="none">
+  <!-- Diamond mark -->
+  <path d="M24 4L6 20L24 44L42 20L24 4Z" fill="#f7931a" opacity="0.9"/>
+  <path d="M24 4L6 20L24 24L24 4Z" fill="#f7931a" opacity="0.7"/>
+  <path d="M24 4L42 20L24 24L24 4Z" fill="#f7931a" opacity="1"/>
+  <path d="M6 20L24 44L24 24L6 20Z" fill="#f7931a" opacity="0.55"/>
+  <path d="M42 20L24 44L24 24L42 20Z" fill="#f7931a" opacity="0.75"/>
+  <path d="M14 20L24 8L34 20L24 28L14 20Z" fill="white" opacity="0.12"/>
+  <!-- "Source of Clarity" text -->
+  <text x="52" y="30" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700" fill="#f0f6fc">Source of <tspan fill="#f7931a">Clarity</tspan></text>
+</svg>

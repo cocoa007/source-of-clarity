@@ -1,7 +1,9 @@
 import { notFound } from "next/navigation";
 import { getContractById, getContractFunctions } from "@/lib/contracts";
 import { getAuditsForContract } from "@/lib/audits";
+import { getCommentsByContract, getCommentCountsByLine } from "@/lib/comments";
 import ContractSource from "@/components/ContractSource";
+import ContractSourceInteractive from "@/components/ContractSourceInteractive";
 import FunctionTable from "@/components/FunctionTable";
 import AuditButton from "@/components/AuditButton";
 import AuditCard from "@/components/AuditCard";
@@ -17,10 +19,12 @@ export default async function ContractPage({
 }) {
   const { principal, name } = await params;
   const contractId = `${principal}.${name}`;
-  const [contract, functions, audits] = await Promise.all([
+  const [contract, functions, audits, comments, commentCounts] = await Promise.all([
     getContractById(contractId),
     getContractFunctions(contractId),
     getAuditsForContract(contractId),
+    getCommentsByContract(contractId),
+    getCommentCountsByLine(contractId),
   ]);
 
   if (!contract) notFound();
@@ -47,7 +51,15 @@ export default async function ContractPage({
           {contract.source && (
             <section className="mb-8">
               <h2 className="mb-3 text-lg font-semibold text-[#f0f6fc]">Source Code</h2>
-              <ContractSource source={contract.source} />
+              <ContractSourceInteractive
+                contractId={contractId}
+                principal={principal}
+                contractName={name}
+                commentCounts={commentCounts}
+                initialComments={JSON.parse(JSON.stringify(comments))}
+              >
+                <ContractSource source={contract.source} />
+              </ContractSourceInteractive>
             </section>
           )}
 

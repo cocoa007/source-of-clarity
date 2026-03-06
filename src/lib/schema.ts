@@ -27,6 +27,7 @@ export const contracts = pgTable(
     sip010: boolean("sip_010").default(false),
     functionCount: integer("function_count").default(0),
     protocol: text("protocol"),
+    network: text("network").default("mainnet").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
   },
   (table) => [
@@ -34,6 +35,7 @@ export const contracts = pgTable(
     index("idx_contracts_block_height").on(table.blockHeight),
     index("idx_contracts_sip009").on(table.sip009),
     index("idx_contracts_sip010").on(table.sip010),
+    index("idx_contracts_network").on(table.network),
   ]
 );
 
@@ -90,6 +92,48 @@ export const auditFindings = pgTable("audit_findings", {
   recommendation: text("recommendation"),
   codeSnippet: text("code_snippet"),
 });
+
+export const comments = pgTable(
+  "comments",
+  {
+    id: serial("id").primaryKey(),
+    contractId: text("contract_id").notNull(),
+    principal: text("principal").notNull(),
+    contractName: text("contract_name").notNull(),
+    lineNumber: integer("line_number"),
+    lineRangeStart: integer("line_range_start"),
+    lineRangeEnd: integer("line_range_end"),
+    authorDid: text("author_did").notNull(),
+    authorHandle: text("author_handle"),
+    postUri: text("post_uri").notNull().unique(),
+    postCid: text("post_cid").notNull(),
+    parentUri: text("parent_uri"),
+    rootUri: text("root_uri"),
+    body: text("body").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  },
+  (table) => [
+    index("idx_comments_contract_id").on(table.contractId),
+    index("idx_comments_contract_line").on(table.contractId, table.lineNumber),
+    index("idx_comments_parent_uri").on(table.parentUri),
+  ]
+);
+
+export const reactions = pgTable(
+  "reactions",
+  {
+    id: serial("id").primaryKey(),
+    commentUri: text("comment_uri").notNull(),
+    authorDid: text("author_did").notNull(),
+    emoji: text("emoji").notNull(),
+    postUri: text("post_uri").notNull().unique(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  },
+  (table) => [
+    index("idx_reactions_comment_uri").on(table.commentUri),
+    index("idx_reactions_comment_author").on(table.commentUri, table.authorDid),
+  ]
+);
 
 export const auditJobs = pgTable("audit_jobs", {
   id: serial("id").primaryKey(),
