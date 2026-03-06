@@ -154,3 +154,60 @@ export function parseAuditHtml(html: string, slug: string): ParsedAudit {
     htmlContent,
   };
 }
+
+export function parseFindingsFromBodyHtml(bodyHtml: string): ParsedFinding[] {
+  const findings: ParsedFinding[] = [];
+  const findingRegex =
+    /<div class="finding">([\s\S]*?)<\/div>\s*(?=<div class="finding">|<h2|$)/g;
+  for (const findingMatch of bodyHtml.matchAll(findingRegex)) {
+    const block = findingMatch[1];
+
+    const severityMatch = block.match(
+      /severity\s+(\w+)"[^>]*>[^<]*<\/span>\s*<strong>([^<]+)<\/strong>/
+    );
+    if (!severityMatch) continue;
+
+    const severity = severityMatch[1].toLowerCase();
+    const fullTitle = severityMatch[2];
+    const idMatch = fullTitle.match(/^([A-Z]+-\d+):\s*(.*)/);
+    const findingId = idMatch ? idMatch[1] : "";
+    const title = idMatch ? idMatch[2] : fullTitle;
+
+    const locationMatch = block.match(
+      /Location:<\/strong>\s*([\s\S]*?)(?=<\/p>)/
+    );
+    const location = locationMatch ? stripTags(locationMatch[1]) : "";
+
+    const impactMatch = block.match(
+      /Impact:<\/strong>\s*([\s\S]*?)(?=<\/p>)/
+    );
+    const impact = impactMatch ? stripTags(impactMatch[1]) : "";
+
+    const recMatch = block.match(
+      /Recommendation:<\/strong>\s*([\s\S]*?)(?=<\/p>)/
+    );
+    const recommendation = recMatch ? stripTags(recMatch[1]) : "";
+
+    const codeMatch = block.match(/<pre><code>([\s\S]*?)<\/code><\/pre>/);
+    const codeSnippet = codeMatch ? codeMatch[1].trim() : "";
+
+    const descParagraphs = block.match(
+      /<p>(?!<strong>(?:Location|Impact|Recommendation))([\s\S]*?)<\/p>/g
+    );
+    const description = descParagraphs
+      ? descParagraphs.map((p) => stripTags(p)).join("\n")
+      : "";
+
+    findings.push({
+      findingId,
+      severity,
+      title,
+      location,
+      description,
+      impact,
+      recommendation,
+      codeSnippet,
+    });
+  }
+  return findings;
+}
