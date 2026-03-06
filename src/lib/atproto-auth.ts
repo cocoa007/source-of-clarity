@@ -6,8 +6,8 @@ const SESSION_SECRET =
 interface SessionData {
   did: string;
   handle: string;
-  accessJwt: string;
-  refreshJwt: string;
+  accessJwt?: string;
+  refreshJwt?: string;
 }
 
 export function encryptSession(data: SessionData): string {

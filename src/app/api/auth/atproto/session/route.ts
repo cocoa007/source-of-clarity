@@ -14,7 +14,15 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
 
-  // Try to verify the access token is still valid by checking profile
+  // OAuth sessions only have did + handle (no JWTs)
+  if (!session.accessJwt) {
+    return NextResponse.json({
+      did: session.did,
+      handle: session.handle,
+    });
+  }
+
+  // Legacy JWT session: verify access token
   const profileRes = await fetch(
     `https://bsky.social/xrpc/app.bsky.actor.getProfile?actor=${encodeURIComponent(session.did)}`,
     { headers: { Authorization: `Bearer ${session.accessJwt}` } }
@@ -31,7 +39,7 @@ export async function GET(request: NextRequest) {
   }
 
   // Try refresh
-  const refreshed = await refreshSession(session.refreshJwt);
+  const refreshed = await refreshSession(session.refreshJwt!);
   if (!refreshed) {
     return NextResponse.json({ error: "Session expired" }, { status: 401 });
   }

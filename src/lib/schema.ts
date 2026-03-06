@@ -135,6 +135,18 @@ export const reactions = pgTable(
   ]
 );
 
+export const oauthStates = pgTable("oauth_states", {
+  key: text("key").primaryKey(),
+  data: jsonb("data").notNull(),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+});
+
+export const oauthSessions = pgTable("oauth_sessions", {
+  key: text("key").primaryKey(),
+  data: jsonb("data").notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+});
+
 export const auditJobs = pgTable("audit_jobs", {
   id: serial("id").primaryKey(),
   jobId: text("job_id").notNull().unique(),
