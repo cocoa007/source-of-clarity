@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { getAuditBySlug, getAuditFindings } from "@/lib/audits";
+import { parseFindingsFromBodyHtml } from "@/lib/audit-parser";
 import SeverityBar from "@/components/SeverityBar";
 import SeverityBadge from "@/components/SeverityBadge";
 import AuditFinding from "@/components/AuditFinding";
@@ -18,10 +19,17 @@ export default async function AuditPage({
   if (!audit) notFound();
 
   const findings = await getAuditFindings(audit.id);
+
+  // If no structured findings in DB, try to parse them from the stored HTML body
+  const displayFindings =
+    findings.length === 0 && audit.htmlContent
+      ? parseFindingsFromBodyHtml(audit.htmlContent)
+      : findings;
+
   const grouped = SEVERITY_ORDER
     .map((sev) => ({
       severity: sev,
-      findings: findings.filter((f) => f.severity.toLowerCase() === sev),
+      findings: displayFindings.filter((f) => f.severity.toLowerCase() === sev),
     }))
     .filter((g) => g.findings.length > 0);
 
@@ -30,9 +38,20 @@ export default async function AuditPage({
     (audit.highCount || 0) +
     (audit.mediumCount || 0) +
     (audit.lowCount || 0) +
-    (audit.infoCount || 0);
+    (audit.infoCount || 0) || displayFindings.length;
 
-  const hasFindings = findings.length > 0;
+  const countFor = (sev: string) =>
+    displayFindings.filter((f) => f.severity.toLowerCase() === sev).length;
+
+  const criticalCount = audit.criticalCount || countFor("critical");
+  const highCount = audit.highCount || countFor("high");
+  const mediumCount = audit.mediumCount || countFor("medium");
+  const lowCount = audit.lowCount || countFor("low");
+  const infoCount =
+    audit.infoCount ||
+    countFor("info") + countFor("informational");
+
+  const hasFindings = displayFindings.length > 0;
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
@@ -61,18 +80,18 @@ export default async function AuditPage({
               {/* Severity summary bar */}
               <div className="mb-6">
                 <SeverityBar
-                  critical={audit.criticalCount || 0}
-                  high={audit.highCount || 0}
-                  medium={audit.mediumCount || 0}
-                  low={audit.lowCount || 0}
-                  info={audit.infoCount || 0}
+                  critical={criticalCount}
+                  high={highCount}
+                  medium={mediumCount}
+                  low={lowCount}
+                  info={infoCount}
                 />
                 <div className="mt-2 flex gap-4 text-xs text-[#8b949e]">
-                  {audit.criticalCount ? <span className="text-[#f85149]">{audit.criticalCount} Critical</span> : null}
-                  {audit.highCount ? <span className="text-[#f0883e]">{audit.highCount} High</span> : null}
-                  {audit.mediumCount ? <span className="text-[#d29922]">{audit.mediumCount} Medium</span> : null}
-                  {audit.lowCount ? <span className="text-[#3fb950]">{audit.lowCount} Low</span> : null}
-                  {audit.infoCount ? <span className="text-[#58a6ff]">{audit.infoCount} Info</span> : null}
+                  {criticalCount ? <span className="text-[#f85149]">{criticalCount} Critical</span> : null}
+                  {highCount ? <span className="text-[#f0883e]">{highCount} High</span> : null}
+                  {mediumCount ? <span className="text-[#d29922]">{mediumCount} Medium</span> : null}
+                  {lowCount ? <span className="text-[#3fb950]">{lowCount} Low</span> : null}
+                  {infoCount ? <span className="text-[#58a6ff]">{infoCount} Info</span> : null}
                 </div>
               </div>
 
@@ -84,9 +103,9 @@ export default async function AuditPage({
                     <span className="capitalize">{group.severity} Findings</span>
                   </h2>
                   <div className="space-y-2">
-                    {group.findings.map((f) => (
+                    {group.findings.map((f, i) => (
                       <AuditFinding
-                        key={f.id}
+                        key={f.findingId || i}
                         findingId={f.findingId}
                         severity={f.severity}
                         title={f.title}
