@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { getAuditBySlug, getAuditFindings } from "@/lib/audits";
 import { parseFindingsFromBodyHtml } from "@/lib/audit-parser";
 import SeverityBar from "@/components/SeverityBar";
@@ -55,6 +56,14 @@ export default async function AuditPage({
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
+      <div className="mb-4">
+        <Link
+          href="/audits"
+          className="inline-flex items-center gap-1 text-sm text-[#58a6ff] hover:underline"
+        >
+          ← Back to Audits
+        </Link>
+      </div>
       <div className="lg:flex lg:gap-8">
         {/* Main content */}
         <div className="flex-1 min-w-0">
@@ -125,7 +134,7 @@ export default async function AuditPage({
           {!hasFindings && audit.htmlContent && (
             <div
               className="audit-content prose prose-invert max-w-none [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:text-[#f0f6fc] [&_h1]:mt-8 [&_h1]:mb-4 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-[#f0f6fc] [&_h2]:mt-6 [&_h2]:mb-3 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-[#f0f6fc] [&_h3]:mt-4 [&_h3]:mb-2 [&_p]:text-[#c9d1d9] [&_p]:mb-3 [&_ul]:text-[#c9d1d9] [&_ol]:text-[#c9d1d9] [&_li]:mb-1 [&_code]:bg-[#161b22] [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-[#f7931a] [&_code]:text-sm [&_pre]:bg-[#161b22] [&_pre]:border [&_pre]:border-[#30363d] [&_pre]:rounded-lg [&_pre]:p-4 [&_pre]:overflow-x-auto [&_pre_code]:bg-transparent [&_pre_code]:p-0 [&_a]:text-[#58a6ff] [&_a:hover]:underline [&_table]:w-full [&_table]:border-collapse [&_th]:border [&_th]:border-[#30363d] [&_th]:bg-[#161b22] [&_th]:px-3 [&_th]:py-2 [&_th]:text-left [&_th]:text-[#f0f6fc] [&_td]:border [&_td]:border-[#30363d] [&_td]:px-3 [&_td]:py-2 [&_td]:text-[#c9d1d9] [&_blockquote]:border-l-4 [&_blockquote]:border-[#f7931a] [&_blockquote]:pl-4 [&_blockquote]:text-[#8b949e] [&_hr]:border-[#30363d]"
-              dangerouslySetInnerHTML={{ __html: audit.htmlContent }}
+              dangerouslySetInnerHTML={{ __html: audit.htmlContent.replace(/href=(["'])\s*\/index(?:\.html)?\s*\1/gi, 'href="/audits"') }}
             />
           )}
         </div>
