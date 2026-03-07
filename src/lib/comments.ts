@@ -127,8 +127,10 @@ export async function upsertReaction(data: {
   return { action: "created" as const, oldUri: null };
 }
 
-export async function deleteReactionByUri(postUri: string) {
-  await db.delete(reactions).where(eq(reactions.postUri, postUri));
+export async function deleteReactionByUri(postUri: string, authorDid: string) {
+  await db
+    .delete(reactions)
+    .where(and(eq(reactions.postUri, postUri), eq(reactions.authorDid, authorDid)));
 }
 
 export async function getUserReactions(commentUris: string[], authorDid: string) {
