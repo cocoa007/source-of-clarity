@@ -7,7 +7,8 @@ import ContractSourceInteractive from "@/components/ContractSourceInteractive";
 import FunctionTable from "@/components/FunctionTable";
 import AuditButton from "@/components/AuditButton";
 import AuditCard from "@/components/AuditCard";
-import SipBadge from "@/components/SipBadge";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 
 export const revalidate = 3600;
@@ -36,10 +37,10 @@ export default async function ContractPage({
         <div className="flex-1 min-w-0">
           <div className="mb-6 flex items-start justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-[#f0f6fc]">{contract.name}</h1>
+              <h1 className="text-2xl font-bold text-card-foreground">{contract.name}</h1>
               <Link
                 href={`/deployer/${contract.principal}`}
-                className="text-sm text-[#58a6ff] hover:underline"
+                className="text-sm text-accent hover:underline"
               >
                 {contract.principal}
               </Link>
@@ -50,7 +51,7 @@ export default async function ContractPage({
           {/* Source */}
           {contract.source && (
             <section className="mb-8">
-              <h2 className="mb-3 text-lg font-semibold text-[#f0f6fc]">Source Code</h2>
+              <h2 className="mb-3 text-lg font-semibold text-card-foreground">Source Code</h2>
               <ContractSourceInteractive
                 contractId={contractId}
                 principal={principal}
@@ -66,7 +67,7 @@ export default async function ContractPage({
           {/* Functions */}
           {functions.length > 0 && (
             <section className="mb-8">
-              <h2 className="mb-3 text-lg font-semibold text-[#f0f6fc]">
+              <h2 className="mb-3 text-lg font-semibold text-card-foreground">
                 Functions ({functions.length})
               </h2>
               <FunctionTable functions={functions} />
@@ -76,7 +77,7 @@ export default async function ContractPage({
           {/* Linked Audits */}
           {audits.length > 0 && (
             <section>
-              <h2 className="mb-3 text-lg font-semibold text-[#f0f6fc]">Audit Reports</h2>
+              <h2 className="mb-3 text-lg font-semibold text-card-foreground">Audit Reports</h2>
               <div className="grid gap-4 sm:grid-cols-2">
                 {audits.map((a) => (
                   <AuditCard
@@ -99,31 +100,35 @@ export default async function ContractPage({
 
         {/* Sidebar */}
         <aside className="mt-8 w-full shrink-0 lg:mt-0 lg:w-72">
-          <div className="rounded-lg border border-[#30363d] bg-[#161b22] p-4 space-y-3">
-            <h3 className="text-sm font-semibold text-[#f0f6fc]">Metadata</h3>
-            {contract.blockHeight && (
+          <Card>
+            <CardHeader className="p-4 pb-0">
+              <h3 className="text-sm font-semibold text-card-foreground">Metadata</h3>
+            </CardHeader>
+            <CardContent className="p-4 space-y-3">
+              {contract.blockHeight && (
+                <div className="text-sm">
+                  <span className="text-muted-foreground">Block: </span>
+                  <span className="text-foreground">{contract.blockHeight.toLocaleString()}</span>
+                </div>
+              )}
+              {contract.txId && (
+                <div className="text-sm">
+                  <span className="text-muted-foreground">TX: </span>
+                  <span className="font-mono text-xs text-foreground">
+                    {contract.txId.slice(0, 12)}...
+                  </span>
+                </div>
+              )}
               <div className="text-sm">
-                <span className="text-[#8b949e]">Block: </span>
-                <span className="text-[#c9d1d9]">{contract.blockHeight.toLocaleString()}</span>
+                <span className="text-muted-foreground">Functions: </span>
+                <span className="text-foreground">{contract.functionCount}</span>
               </div>
-            )}
-            {contract.txId && (
-              <div className="text-sm">
-                <span className="text-[#8b949e]">TX: </span>
-                <span className="font-mono text-xs text-[#c9d1d9]">
-                  {contract.txId.slice(0, 12)}...
-                </span>
+              <div className="flex gap-1">
+                {contract.sip009 && <Badge variant="secondary" className="border-primary/30 bg-primary/10 text-primary">SIP-009</Badge>}
+                {contract.sip010 && <Badge variant="secondary" className="border-primary/30 bg-primary/10 text-primary">SIP-010</Badge>}
               </div>
-            )}
-            <div className="text-sm">
-              <span className="text-[#8b949e]">Functions: </span>
-              <span className="text-[#c9d1d9]">{contract.functionCount}</span>
-            </div>
-            <div className="flex gap-1">
-              {contract.sip009 && <SipBadge sip="SIP-009" />}
-              {contract.sip010 && <SipBadge sip="SIP-010" />}
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </aside>
       </div>
     </div>

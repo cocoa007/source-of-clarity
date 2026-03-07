@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { Card, CardContent, CardHeader } from "./ui/card";
+import { Badge } from "./ui/badge";
 import SeverityBar from "./SeverityBar";
 
 interface Props {
@@ -33,27 +35,30 @@ export default function AuditCard({
   const title = contractsAudited?.[0] || slug;
 
   return (
-    <Link
-      href={`/audit/${slug}`}
-      className="group block rounded-lg border border-[#30363d] bg-[#161b22] p-4 transition-all hover:border-[#58a6ff]/50 hover:scale-[1.01]"
-    >
-      <div className="mb-1 truncate text-sm font-semibold text-[#f0f6fc] group-hover:text-[#58a6ff]">
-        {title}
-      </div>
-      <div className="mb-3 flex items-center gap-2 text-xs text-[#8b949e]">
-        <span>{date}</span>
-        {confidence && (
-          <span className="rounded bg-[#30363d] px-1.5 py-0.5">{confidence}</span>
-        )}
-      </div>
-      <SeverityBar
-        critical={criticalCount || 0}
-        high={highCount || 0}
-        medium={mediumCount || 0}
-        low={lowCount || 0}
-        info={infoCount || 0}
-      />
-      <div className="mt-2 text-xs text-[#8b949e]">{total} findings</div>
+    <Link href={`/audit/${slug}`} className="group block">
+      <Card className="transition-all hover:border-accent/50 hover:scale-[1.01]">
+        <CardHeader className="p-4 pb-1">
+          <div className="truncate text-sm font-semibold text-card-foreground group-hover:text-accent">
+            {title}
+          </div>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span>{date}</span>
+            {confidence && (
+              <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{confidence}</Badge>
+            )}
+          </div>
+        </CardHeader>
+        <CardContent className="p-4 pt-2">
+          <SeverityBar
+            critical={criticalCount || 0}
+            high={highCount || 0}
+            medium={mediumCount || 0}
+            low={lowCount || 0}
+            info={infoCount || 0}
+          />
+          <div className="mt-2 text-xs text-muted-foreground">{total} findings</div>
+        </CardContent>
+      </Card>
     </Link>
   );
 }

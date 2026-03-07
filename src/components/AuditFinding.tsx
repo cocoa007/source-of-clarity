@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "./ui/accordion";
 import SeverityBadge from "./SeverityBadge";
 
 interface Props {
@@ -24,50 +24,43 @@ export default function AuditFinding({
   recommendation,
   codeSnippet,
 }: Props) {
-  const [expanded, setExpanded] = useState(false);
-
   return (
-    <div className="rounded-lg border border-[#30363d] bg-[#161b22]">
-      <button
-        onClick={() => setExpanded(!expanded)}
-        className="flex w-full items-center gap-3 px-4 py-3 text-left"
-      >
-        <SeverityBadge severity={severity} />
-        <span className="text-xs font-mono text-[#8b949e]">{findingId}</span>
-        <span className="flex-1 text-sm font-medium text-[#f0f6fc]">{title}</span>
-        <span className="text-[#8b949e] transition-transform" style={{ transform: expanded ? "rotate(180deg)" : "" }}>
-          &#9662;
-        </span>
-      </button>
-
-      {expanded && (
-        <div className="border-t border-[#30363d] px-4 py-4 space-y-3 text-sm text-[#c9d1d9]">
+    <Accordion type="single" collapsible>
+      <AccordionItem value={findingId} className="rounded-lg border border-border bg-card">
+        <AccordionTrigger className="gap-3 px-4 py-3 hover:no-underline">
+          <div className="flex items-center gap-3 text-left">
+            <SeverityBadge severity={severity} />
+            <span className="text-xs font-mono text-muted-foreground">{findingId}</span>
+            <span className="text-sm font-medium text-card-foreground">{title}</span>
+          </div>
+        </AccordionTrigger>
+        <AccordionContent className="px-4 space-y-3 text-sm text-foreground">
           {location && (
             <div>
-              <span className="font-semibold text-[#8b949e]">Location: </span>
+              <span className="font-semibold text-muted-foreground">Location: </span>
               <span className="font-mono">{location}</span>
             </div>
           )}
           {description && <p>{description}</p>}
           {codeSnippet && (
-            <pre className="overflow-x-auto rounded border border-[#30363d] bg-[#0d1117] p-3 text-xs">
+            <pre className="overflow-x-auto rounded border border-border bg-background p-3 text-xs">
               <code>{codeSnippet}</code>
             </pre>
           )}
           {impact && (
             <div>
-              <span className="font-semibold text-[#8b949e]">Impact: </span>
+              <span className="font-semibold text-muted-foreground">Impact: </span>
               {impact}
             </div>
           )}
           {recommendation && (
             <div>
-              <span className="font-semibold text-[#8b949e]">Recommendation: </span>
+              <span className="font-semibold text-muted-foreground">Recommendation: </span>
               {recommendation}
             </div>
           )}
-        </div>
-      )}
-    </div>
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   );
 }

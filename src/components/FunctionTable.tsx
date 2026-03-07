@@ -1,3 +1,5 @@
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "./ui/table";
+
 interface FnRow {
   name: string;
   access: string;
@@ -15,33 +17,33 @@ export default function FunctionTable({ functions }: { functions: FnRow[] }) {
   if (functions.length === 0) return null;
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-[#30363d]">
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="border-b border-[#30363d] bg-[#161b22]">
-            <th className="px-4 py-2 text-left font-medium text-[#8b949e]">Function</th>
-            <th className="px-4 py-2 text-left font-medium text-[#8b949e]">Access</th>
-            <th className="px-4 py-2 text-left font-medium text-[#8b949e]">Args</th>
-          </tr>
-        </thead>
-        <tbody>
+    <div className="rounded-lg border border-border">
+      <Table>
+        <TableHeader>
+          <TableRow className="bg-card">
+            <TableHead>Function</TableHead>
+            <TableHead>Access</TableHead>
+            <TableHead>Args</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {functions.map((fn, i) => (
-            <tr key={i} className="border-b border-[#30363d] last:border-0">
-              <td className="px-4 py-2 font-mono text-[#f0f6fc]">{fn.name}</td>
-              <td className={`px-4 py-2 ${ACCESS_COLORS[fn.access] || ""}`}>
+            <TableRow key={i}>
+              <TableCell className="font-mono text-card-foreground">{fn.name}</TableCell>
+              <TableCell className={ACCESS_COLORS[fn.access] || ""}>
                 {fn.access}
-              </td>
-              <td className="px-4 py-2 text-[#8b949e]">
+              </TableCell>
+              <TableCell className="text-muted-foreground">
                 {Array.isArray(fn.args)
                   ? (fn.args as { name: string; type: string }[])
                       .map((a) => `${a.name}: ${a.type}`)
                       .join(", ")
-                  : "—"}
-              </td>
-            </tr>
+                  : "\u2014"}
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </div>
   );
 }

@@ -1,10 +1,13 @@
+import { Separator } from "./ui/separator";
+
 export default function Footer() {
   return (
-    <footer className="mt-auto border-t border-[#30363d] bg-[#0d1117] py-8">
+    <footer className="mt-auto bg-background py-8">
+      <Separator className="mb-8" />
       <div className="mx-auto max-w-7xl px-4">
         <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
           {/* Brand */}
-          <div className="flex items-center gap-2 text-sm text-[#8b949e]">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo.svg" alt="" width={20} height={20} className="opacity-60" />
             <span>Source of Clarity</span>
@@ -14,7 +17,7 @@ export default function Footer() {
           <div className="flex items-center gap-4">
             <a
               href="https://github.com/cocoa007/source-of-clarity"
-              className="text-[#8b949e] hover:text-[#c9d1d9] transition-colors"
+              className="text-muted-foreground hover:text-foreground transition-colors"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub"
@@ -23,7 +26,7 @@ export default function Footer() {
             </a>
             <a
               href="https://x.com/cocoa007_bot"
-              className="text-[#8b949e] hover:text-[#c9d1d9] transition-colors"
+              className="text-muted-foreground hover:text-foreground transition-colors"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="X"
@@ -32,7 +35,7 @@ export default function Footer() {
             </a>
             <a
               href="https://bsky.app/profile/cocoa007.bsky.social"
-              className="text-[#8b949e] hover:text-[#c9d1d9] transition-colors"
+              className="text-muted-foreground hover:text-foreground transition-colors"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Bluesky"
@@ -42,11 +45,11 @@ export default function Footer() {
           </div>
 
           {/* Attribution */}
-          <div className="text-center text-sm text-[#8b949e] sm:text-right">
+          <div className="text-center text-sm text-muted-foreground sm:text-right">
             Built by{" "}
             <a
               href="https://github.com/cocoa007"
-              className="text-[#58a6ff] hover:underline"
+              className="text-accent hover:underline"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -55,7 +58,7 @@ export default function Footer() {
             &middot; Powered by{" "}
             <a
               href="https://www.stacks.co"
-              className="text-[#58a6ff] hover:underline"
+              className="text-accent hover:underline"
               target="_blank"
               rel="noopener noreferrer"
             >

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Button } from "./ui/button";
 import AuthButton from "./comments/AuthButton";
 
 const links = [
@@ -15,26 +16,28 @@ export default function Navbar() {
   const pathname = usePathname();
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-[#30363d] bg-[#0d1117]/95 backdrop-blur">
+    <nav className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-        <Link href="/" className="flex items-center gap-2 text-lg font-bold text-[#f0f6fc]">
+        <Link href="/" className="flex items-center gap-2 text-lg font-bold text-card-foreground">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo.svg" alt="" width={28} height={28} />
           Source of Clarity
         </Link>
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-1">
           {links.map((link) => (
-            <Link
+            <Button
               key={link.href}
-              href={link.href}
-              className={`text-sm transition-colors hover:text-[#f0f6fc] ${
-                pathname === link.href ? "text-[#f0f6fc]" : "text-[#8b949e]"
-              }`}
+              variant="ghost"
+              size="sm"
+              asChild
+              className={pathname === link.href ? "text-card-foreground" : "text-muted-foreground"}
             >
-              {link.label}
-            </Link>
+              <Link href={link.href}>{link.label}</Link>
+            </Button>
           ))}
-          <AuthButton compact />
+          <div className="ml-3">
+            <AuthButton compact />
+          </div>
         </div>
       </div>
     </nav>

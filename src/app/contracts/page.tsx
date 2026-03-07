@@ -3,6 +3,7 @@ import ContractCard from "@/components/ContractCard";
 import SearchInput from "@/components/SearchInput";
 import { searchContracts } from "@/lib/contracts";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export const revalidate = 3600;
 
@@ -30,7 +31,7 @@ export default async function ContractsPage({
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
-      <h1 className="mb-6 text-2xl font-bold text-[#f0f6fc]">Contracts</h1>
+      <h1 className="mb-6 text-2xl font-bold text-card-foreground">Contracts</h1>
 
       <div className="mb-6 flex flex-wrap items-center gap-4">
         <Suspense>
@@ -43,13 +44,13 @@ export default async function ContractsPage({
         </div>
       </div>
 
-      <p className="mb-4 text-sm text-[#8b949e]">
+      <p className="mb-4 text-sm text-muted-foreground">
         {result.total.toLocaleString()} contracts found
       </p>
 
       {result.functionMatches.length > 0 && (
         <div className="mb-6">
-          <h2 className="mb-3 text-sm font-semibold text-[#f0f6fc]">
+          <h2 className="mb-3 text-sm font-semibold text-card-foreground">
             Function matches
           </h2>
           <div className="flex flex-wrap gap-2">
@@ -59,11 +60,11 @@ export default async function ContractsPage({
                 <Link
                   key={`${fn.contractId}-${fn.functionName}`}
                   href={`/contract/${principal}/${name}`}
-                  className="rounded-lg border border-[#30363d] bg-[#161b22] px-3 py-2 text-sm transition-colors hover:border-[#58a6ff]"
+                  className="rounded-lg border border-border bg-card px-3 py-2 text-sm transition-colors hover:border-accent"
                 >
-                  <span className="font-mono text-[#f7931a]">{fn.functionName}</span>
-                  <span className="ml-1.5 text-xs text-[#8b949e]">({fn.access})</span>
-                  <div className="mt-0.5 text-xs text-[#484f58] truncate max-w-[250px]">{name}</div>
+                  <span className="font-mono text-primary">{fn.functionName}</span>
+                  <span className="ml-1.5 text-xs text-muted-foreground">({fn.access})</span>
+                  <div className="mt-0.5 text-xs text-muted-foreground/60 truncate max-w-[250px]">{name}</div>
                 </Link>
               );
             })}
@@ -89,23 +90,21 @@ export default async function ContractsPage({
       {result.totalPages > 1 && (
         <div className="mt-8 flex justify-center gap-2">
           {page > 1 && (
-            <Link
-              href={`/contracts?${baseParams.toString()}&page=${page - 1}`}
-              className="rounded border border-[#30363d] px-4 py-2 text-sm text-[#c9d1d9] hover:border-[#58a6ff]"
-            >
-              Previous
-            </Link>
+            <Button variant="outline" size="sm" asChild>
+              <Link href={`/contracts?${baseParams.toString()}&page=${page - 1}`}>
+                Previous
+              </Link>
+            </Button>
           )}
-          <span className="px-4 py-2 text-sm text-[#8b949e]">
+          <span className="px-4 py-2 text-sm text-muted-foreground">
             Page {page} of {result.totalPages}
           </span>
           {page < result.totalPages && (
-            <Link
-              href={`/contracts?${baseParams.toString()}&page=${page + 1}`}
-              className="rounded border border-[#30363d] px-4 py-2 text-sm text-[#c9d1d9] hover:border-[#58a6ff]"
-            >
-              Next
-            </Link>
+            <Button variant="outline" size="sm" asChild>
+              <Link href={`/contracts?${baseParams.toString()}&page=${page + 1}`}>
+                Next
+              </Link>
+            </Button>
           )}
         </div>
       )}
@@ -134,15 +133,15 @@ function FilterChip({
   }
 
   return (
-    <Link
-      href={`/contracts?${newParams.toString()}`}
-      className={`rounded-full border px-3 py-1 text-xs transition-colors ${
-        active
-          ? "border-[#f7931a] bg-[#f7931a]/10 text-[#f7931a]"
-          : "border-[#30363d] text-[#8b949e] hover:border-[#58a6ff]"
-      }`}
+    <Button
+      variant={active ? "default" : "outline"}
+      size="sm"
+      asChild
+      className={active ? "bg-primary/10 text-primary border-primary hover:bg-primary/20" : ""}
     >
-      {label}
-    </Link>
+      <Link href={`/contracts?${newParams.toString()}`}>
+        {label}
+      </Link>
+    </Button>
   );
 }

@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Button } from "./ui/button";
+import { Card, CardHeader, CardContent } from "./ui/card";
 
 const TYPES = [
   { type: "explain", label: "Explain", price: 300 },
@@ -36,42 +38,43 @@ export default function AuditButton({ contractId }: { contractId: string }) {
 
   return (
     <>
-      <button
-        onClick={() => setOpen(true)}
-        className="rounded-lg bg-[#f7931a] px-4 py-2 text-sm font-semibold text-[#0d1117] transition-colors hover:bg-[#f7931a]/90"
-      >
+      <Button onClick={() => setOpen(true)}>
         Request Audit
-      </button>
+      </Button>
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className="w-full max-w-md rounded-lg border border-[#30363d] bg-[#161b22] p-6">
-            <h3 className="mb-4 text-lg font-semibold text-[#f0f6fc]">
-              Request x402 Audit
-            </h3>
-            <p className="mb-4 text-sm text-[#8b949e]">
-              Select an analysis type. Payment via x402 protocol (sBTC).
-            </p>
-            <div className="space-y-2">
+          <Card className="w-full max-w-md">
+            <CardHeader>
+              <h3 className="text-lg font-semibold text-card-foreground">
+                Request x402 Audit
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                Select an analysis type. Payment via x402 protocol (sBTC).
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-2">
               {TYPES.map((t) => (
-                <button
+                <Button
                   key={t.type}
+                  variant="outline"
                   onClick={() => handleRequest(t.type)}
                   disabled={loading}
-                  className="flex w-full items-center justify-between rounded-lg border border-[#30363d] bg-[#0d1117] px-4 py-3 text-sm text-[#c9d1d9] transition-colors hover:border-[#58a6ff] disabled:opacity-50"
+                  className="flex w-full items-center justify-between"
                 >
                   <span>{t.label}</span>
-                  <span className="text-[#f7931a]">{t.price} sats</span>
-                </button>
+                  <span className="text-primary">{t.price} sats</span>
+                </Button>
               ))}
-            </div>
-            <button
-              onClick={() => setOpen(false)}
-              className="mt-4 w-full rounded-lg border border-[#30363d] py-2 text-sm text-[#8b949e] hover:text-[#c9d1d9]"
-            >
-              Cancel
-            </button>
-          </div>
+              <Button
+                variant="ghost"
+                onClick={() => setOpen(false)}
+                className="mt-2 w-full text-muted-foreground"
+              >
+                Cancel
+              </Button>
+            </CardContent>
+          </Card>
         </div>
       )}
     </>

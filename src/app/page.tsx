@@ -4,6 +4,8 @@ import StatsCard from "@/components/StatsCard";
 import ContractCard from "@/components/ContractCard";
 import AuditCard from "@/components/AuditCard";
 import SearchInput from "@/components/SearchInput";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { getContractStats, getRecentContracts } from "@/lib/contracts";
 import { getAuditStats, getRecentAudits } from "@/lib/audits";
 
@@ -24,13 +26,13 @@ export default async function Home() {
       <section className="animate-fade-in mb-16 text-center">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/logo.svg" alt="" width={56} height={56} className="mx-auto mb-4" />
-        <h1 className="mb-2 text-4xl font-bold text-[#f0f6fc] md:text-5xl">
-          Source of <span className="text-[#f7931a]">Clarity</span>
+        <h1 className="mb-2 text-4xl font-bold text-card-foreground md:text-5xl">
+          Source of <span className="text-primary">Clarity</span>
         </h1>
-        <p className="mb-4 text-xl text-[#f7931a] font-medium tracking-wide">
+        <p className="mb-4 text-xl text-primary font-medium tracking-wide">
           Clarity, clarified.
         </p>
-        <p className="mx-auto mb-8 max-w-2xl text-lg text-[#8b949e]">
+        <p className="mx-auto mb-8 max-w-2xl text-lg text-muted-foreground">
           Explore, audit, and discuss 100k+ Clarity smart contracts on Stacks.
         </p>
         <div className="flex justify-center mb-10">
@@ -41,26 +43,34 @@ export default async function Home() {
 
         {/* Feature pillars */}
         <div className="mx-auto grid max-w-3xl gap-4 sm:grid-cols-3">
-          <div className="rounded-lg border border-[#30363d] bg-[#161b22] p-4 text-left">
-            <div className="mb-2 text-lg font-semibold text-[#f0f6fc]">Browse</div>
-            <p className="text-sm text-[#8b949e]">
-              Search and explore 100k+ Clarity contracts with syntax highlighting and function analysis.
-            </p>
-          </div>
-          <div className="rounded-lg border border-[#30363d] bg-[#161b22] p-4 text-left">
-            <div className="mb-2 text-lg font-semibold text-[#f0f6fc]">Audit</div>
-            <p className="text-sm text-[#8b949e]">
-              Request security audits powered by x402. Pay in sBTC, get findings in minutes.
-            </p>
-          </div>
-          <div className="rounded-lg border border-[#30363d] bg-[#161b22] p-4 text-left">
-            <div className="mb-2 text-lg font-semibold text-[#f0f6fc]">Comment</div>
-            <p className="text-sm text-[#8b949e]">
-              Discuss code line-by-line with your Bluesky account. Built on AT Protocol.
-            </p>
-          </div>
+          <Card className="text-left">
+            <CardContent className="p-4">
+              <div className="mb-2 text-lg font-semibold text-card-foreground">Browse</div>
+              <p className="text-sm text-muted-foreground">
+                Search and explore 100k+ Clarity contracts with syntax highlighting and function analysis.
+              </p>
+            </CardContent>
+          </Card>
+          <Card className="text-left">
+            <CardContent className="p-4">
+              <div className="mb-2 text-lg font-semibold text-card-foreground">Audit</div>
+              <p className="text-sm text-muted-foreground">
+                Request security audits powered by x402. Pay in sBTC, get findings in minutes.
+              </p>
+            </CardContent>
+          </Card>
+          <Card className="text-left">
+            <CardContent className="p-4">
+              <div className="mb-2 text-lg font-semibold text-card-foreground">Comment</div>
+              <p className="text-sm text-muted-foreground">
+                Discuss code line-by-line with your Bluesky account. Built on AT Protocol.
+              </p>
+            </CardContent>
+          </Card>
         </div>
       </section>
+
+      <Separator className="mb-16" />
 
       {/* Stats */}
       <section className="animate-fade-in animate-fade-in-delay-1 mb-16 grid grid-cols-2 gap-4 md:grid-cols-4">
@@ -73,8 +83,8 @@ export default async function Home() {
       {/* Recent Contracts */}
       <section className="animate-fade-in animate-fade-in-delay-2 mb-16">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-[#f0f6fc]">Recent Deployments</h2>
-          <Link href="/contracts" className="text-sm text-[#58a6ff] hover:underline">
+          <h2 className="text-xl font-semibold text-card-foreground">Recent Deployments</h2>
+          <Link href="/contracts" className="text-sm text-accent hover:underline">
             View all
           </Link>
         </div>
@@ -93,15 +103,15 @@ export default async function Home() {
           ))}
         </div>
         {recentContracts.length === 0 && (
-          <p className="text-center text-[#8b949e]">No contracts indexed yet. Run the import script to get started.</p>
+          <p className="text-center text-muted-foreground">No contracts indexed yet. Run the import script to get started.</p>
         )}
       </section>
 
       {/* Recent Audits */}
       <section className="animate-fade-in animate-fade-in-delay-3">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-[#f0f6fc]">Recent Audits</h2>
-          <Link href="/audits" className="text-sm text-[#58a6ff] hover:underline">
+          <h2 className="text-xl font-semibold text-card-foreground">Recent Audits</h2>
+          <Link href="/audits" className="text-sm text-accent hover:underline">
             View all
           </Link>
         </div>
@@ -122,7 +132,7 @@ export default async function Home() {
           ))}
         </div>
         {recentAudits.length === 0 && (
-          <p className="text-center text-[#8b949e]">No audits imported yet. Run the audit import script.</p>
+          <p className="text-center text-muted-foreground">No audits imported yet. Run the audit import script.</p>
         )}
       </section>
     </div>

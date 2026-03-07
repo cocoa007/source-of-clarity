@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Card, CardContent } from "./ui/card";
 
 export default function StatsCard({
   label,
@@ -32,11 +33,13 @@ export default function StatsCard({
   }, [value]);
 
   return (
-    <div className="rounded-lg border border-[#30363d] bg-[#161b22] p-6 text-center transition-transform hover:scale-[1.02]">
-      <div className="text-3xl font-bold" style={{ color }}>
-        {display.toLocaleString()}
-      </div>
-      <div className="mt-1 text-sm text-[#8b949e]">{label}</div>
-    </div>
+    <Card className="text-center transition-transform hover:scale-[1.02]">
+      <CardContent className="p-6">
+        <div className="text-3xl font-bold" style={{ color }}>
+          {display.toLocaleString()}
+        </div>
+        <div className="mt-1 text-sm text-muted-foreground">{label}</div>
+      </CardContent>
+    </Card>
   );
 }
