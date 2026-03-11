@@ -3,11 +3,15 @@ import { processChainhookPayload } from "@/lib/chainhook";
 
 export async function POST(request: NextRequest) {
   const authToken = process.env.CHAINHOOK_AUTH_TOKEN;
-  if (authToken) {
-    const provided = request.headers.get("authorization")?.replace("Bearer ", "");
-    if (provided !== authToken) {
-      return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-    }
+  if (!authToken) {
+    return NextResponse.json(
+      { error: "CHAINHOOK_AUTH_TOKEN not configured" },
+      { status: 500 }
+    );
+  }
+  const provided = request.headers.get("authorization")?.replace("Bearer ", "");
+  if (provided !== authToken) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
   try {

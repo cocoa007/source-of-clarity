@@ -1,7 +1,12 @@
 import crypto from "crypto";
 
-const SESSION_SECRET =
-  process.env.ATPROTO_SESSION_SECRET || "default-dev-secret-change-in-prod!!";
+const SESSION_SECRET = process.env.ATPROTO_SESSION_SECRET;
+if (!SESSION_SECRET) {
+  throw new Error(
+    "ATPROTO_SESSION_SECRET environment variable is required. " +
+    "Generate one with: node -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\""
+  );
+}
 
 interface SessionData {
   did: string;

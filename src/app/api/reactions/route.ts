@@ -130,7 +130,7 @@ export async function DELETE(request: NextRequest) {
     }).catch(() => {});
   }
 
-  await deleteReactionByUri(reactionUri);
+  await deleteReactionByUri(reactionUri, session.did);
 
   return NextResponse.json({ ok: true });
 }
